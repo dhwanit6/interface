@@ -1,0 +1,464 @@
+    <title>APEX | The Zenith of Engineering.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'canvas': '#ffffff',
+                        'ink': '#020617',
+                        'subtle': '#64748b',
+                        'accent': '#0066ff',
+                        'accent-bright': '#38bdf8',
+                        'glass': 'rgba(255, 255, 255, 0.7)',
+                        'glass-edge': 'rgba(0, 0, 0, 0.05)',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'display': ['Outfit', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Outfit:wght@800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --accent: #0066ff; 
+            --velocity: 0;
+            /* TYPE CLAMPS (Zenith Fluid Typography) */
+            --step-huge: clamp(5rem, 18vw + 1rem, 30rem);
+            --step-hero: clamp(2.5rem, 6vw + 1rem, 6rem);
+            --step-h2: clamp(2rem, 4vw + 1rem, 5rem);
+        }
+        
+        body { 
+            background: #ffffff; color: #020617; font-family: 'Inter', sans-serif; 
+            overflow-x: hidden; -webkit-font-smoothing: antialiased; 
+        }
+
+        /* GPU VELOCITY ENGINE (ZENITH) */
+        .velocity-target { 
+            will-change: transform, filter;
+            transform: translate3d(0,0,0);
+            transition: filter 0.3s ease-out, transform 0.3s ease-out;
+        }
+        .v-blur { filter: blur(calc(3px * var(--velocity))); }
+        .v-scale { transform: scale(calc(1 + (0.05 * var(--velocity)))) translate3d(0,0,0); }
+
+        .text-zenith { 
+            font-family: 'Outfit', sans-serif; font-weight: 900; line-height: 0.75; 
+            letter-spacing: -0.06em; text-transform: uppercase;
+            background: linear-gradient(180deg, #020617 0%, rgba(2, 6, 23, 0.6) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .glass-zenith {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-zenith:hover { transform: translateY(-4px); border-color: rgba(0, 102, 255, 0.2); box-shadow: 0 30px 60px rgba(0, 102, 255, 0.1); }
+
+        .btn-zenith {
+            background: var(--accent); color: #fff; font-weight: 800; font-size: 14px; 
+            padding: 18px 36px; border-radius: 100px; 
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex; align-items: center; gap: 10px;
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.2);
+        }
+        .btn-zenith:hover { 
+            transform: translateY(-4px) scale(1.02); 
+            box-shadow: 0 20px 50px rgba(0, 102, 255, 0.4); 
+        }
+
+        /* STATUS PULSE (Zenith Heartbeat) */
+        .heartbeat {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #0066ff; box-shadow: 0 0 15px #0066ff;
+            animation: pulse-ring 2s infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(0, 102, 255, 0.4); }
+            70% { transform: scale(1.2); box-shadow: 0 0 0 10px rgba(0, 102, 255, 0); }
+            100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(0, 102, 255, 0); }
+        }
+
+        .engine-step { border-left: 2px solid rgba(0,0,0,0.05); padding-left: 40px; }
+        .engine-step.active { border-left-color: var(--accent); }
+
+        .grain::after {
+            content: ""; position: fixed; top: -100%; left: -100%; width: 300%; height: 300%;
+            background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+            opacity: 0.03; pointer-events: none; z-index: 9999; animation: grain 8s steps(10) infinite;
+        }
+        
+        .orbit-glow {
+            position: absolute; width: 800px; height: 800px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 102, 255, 0.05) 0%, transparent 70%);
+            filter: blur(100px); pointer-events: none;
+        }
+    </style>
+</head>
+<body class="grain bg-canvas">
+    <!-- VELOCITY HUD (ZENITH LIGHT) -->
+    <div class="fixed right-10 top-1/2 -translate-y-1/2 z-[100] flex flex-col gap-3 items-end">
+        <div class="velocity-bar h-1 w-8 bg-black/5 transition-all duration-300"></div>
+        <div class="velocity-bar h-1 w-12 bg-black/5 transition-all duration-300"></div>
+        <div class="velocity-bar h-1 w-16 bg-black/5 transition-all duration-300 active !bg-accent"></div>
+        <div class="velocity-bar h-1 w-12 bg-black/5 transition-all duration-300"></div>
+        <div class="velocity-bar h-1 w-8 bg-black/5 transition-all duration-300"></div>
+    </div>
+
+    <!-- HEADER & NAV (ZENITH LIGHT) -->
+    <nav class="fixed top-10 left-1/2 -translate-x-1/2 z-[100] w-[92%] max-w-[1200px]">
+        <div class="glass-zenith rounded-full px-10 h-20 flex justify-between items-center">
+            <div class="flex items-center gap-16">
+                <a href="#" class="text-2xl font-black tracking-tighter flex items-center gap-3">
+                    <div class="w-2.5 h-8 bg-accent rounded-full"></div>
+                    APEX
+                </a>
+                <div class="hidden lg:flex gap-10">
+                    <a href="#work" class="text-[11px] font-bold uppercase tracking-[0.2em] text-subtle hover:text-ink transition-colors">Builds</a>
+                    <a href="#execution" class="text-[11px] font-bold uppercase tracking-[0.2em] text-subtle hover:text-ink transition-colors">The Engine</a>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-10">
+                <div class="flex items-center gap-3 glass-zenith !bg-black/5 !border-black/5 px-4 py-2 rounded-full shadow-none">
+                    <div class="heartbeat"></div>
+                    <span class="text-[9px] font-bold uppercase tracking-widest">Network: Optimal</span>
+                </div>
+                <a href="mailto:ceo@apex.global" class="btn-zenith !py-3 !px-8 !text-[12px]">
+                    Initialize Project
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION (ZENITH LIGHT) -->
+    <header class="relative pt-60 pb-40 px-8 min-h-screen flex items-center overflow-hidden bg-white" id="hero">
+        <!-- Depth Layers -->
+        <div class="orbit-glow -top-40 -left-60"></div>
+        <div class="orbit-glow bottom-0 -right-60 opacity-40"></div>
+
+        <div class="relative z-10 w-full max-w-[1400px] mx-auto text-center">
+            <div class="inline-flex items-center gap-4 glass-zenith px-6 py-3 rounded-full mb-16 animate-reveal">
+                <div class="heartbeat"></div>
+                <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-accent">Peak Velocity Engaged // v9.0</span>
+            </div>
+            
+            <h1 class="text-zenith velocity-target v-blur v-scale mb-12" style="font-size: var(--step-huge);">
+                SPEED.
+            </h1>
+            
+            <div class="max-w-5xl mx-auto">
+                <p class="text-ink font-bold tracking-tight leading-[1.05] mb-20 velocity-target v-scale" style="font-size: var(--step-hero);">
+                    BUILDING THE SOFTWARE <br>
+                    YOU WISH YOU HAD <span class="bg-gradient-to-r from-accent to-accent-bright bg-clip-text text-transparent italic">YESTERDAY.</span>
+                </p>
+                
+                <div class="flex flex-col items-center gap-16">
+                    <div class="flex flex-col sm:flex-row items-center gap-8">
+                        <a href="#work" class="btn-zenith !text-lg !px-12 !py-6">
+                            Explore Build Log
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="ml-2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </a>
+                        <div class="h-12 w-[1px] bg-black/5 hidden sm:block"></div>
+                        <div class="text-left">
+                            <div class="text-[10px] font-bold uppercase tracking-widest text-accent mb-1 italic">Industrial Protocol</div>
+                            <div class="text-xl font-bold opacity-30">Rajkot to the World.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ZENITH TICKER (LIGHT) -->
+    <div class="py-20 bg-canvas relative overflow-hidden border-y border-black/5">
+        <div class="flex whitespace-nowrap animate-scroll w-max opacity-10 italic font-black">
+            <div class="flex gap-32 items-center px-16 text-8xl uppercase tracking-tighter velocity-target v-blur">
+                <span>Velocity</span> <span class="text-accent underline">Engineering</span> <span>Sovereignty</span> <span class="text-accent underline">Industrialized</span> <span>World-Class</span> <span class="text-accent underline">Logic</span>
+                <!-- Loop -->
+                <span>Velocity</span> <span class="text-accent underline">Engineering</span> <span>Sovereignty</span> <span class="text-accent underline">Industrialized</span> <span>World-Class</span> <span class="text-accent underline">Logic</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION: CASE LOGS (ZENITH LIGHT) -->
+    <section id="work" class="py-60 bg-white relative overflow-hidden">
+        <div class="orbit-glow top-0 right-0 opacity-10"></div>
+        <div class="max-w-[1400px] mx-auto px-8 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-40 gap-12">
+                <div>
+                    <div class="inline-flex items-center gap-3 glass-zenith px-4 py-2 rounded-full mb-10 border-black/5">
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-accent">Artifact_Log // 01</span>
+                    </div>
+                    <h2 class="text-zenith velocity-target v-blur v-scale" style="font-size: var(--step-h2);">Case Logs.</h2>
+                </div>
+                <div class="text-[12px] font-bold text-subtle max-w-sm uppercase tracking-[0.3em] leading-relaxed opacity-60">
+                    Proof of performance. <br> High-stakes engineering delivered at speed.
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10">
+                <!-- Case 1 -->
+                <div class="lg:col-span-8 group">
+                    <div class="glass-zenith p-16 rounded-[40px] h-full flex flex-col justify-between velocity-target v-scale !bg-white">
+                        <div class="flex justify-between items-start mb-32">
+                            <div>
+                                <span class="text-[11px] font-bold text-accent uppercase tracking-[0.2em] mb-6 block">Fintech // 14 Day Sprint</span>
+                                <h3 class="text-5xl font-black tracking-tighter uppercase mb-8">Sovereign_Capital</h3>
+                            </div>
+                            <div class="w-16 h-16 rounded-full glass-zenith !bg-black !text-white flex items-center justify-center group-hover:bg-accent transition-all duration-500 shadow-xl shadow-black/10">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+                            </div>
+                        </div>
+                        <p class="text-2xl font-medium text-subtle max-w-lg mb-16 leading-tight">Institutional asset dashboard. Rebuilt from the ground up for extreme concurrency.</p>
+                        <div class="flex flex-wrap gap-4">
+                            <span class="text-[10px] font-bold uppercase tracking-widest px-5 py-2 bg-black/5 rounded-full border border-black/5">Rust_High_Frequency</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest px-5 py-2 bg-black/5 rounded-full border border-black/5">Wasm_Optimization</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Case 2 -->
+                <div class="lg:col-span-4 group">
+                    <div class="glass-zenith !bg-accent p-16 rounded-[40px] h-full transition-all duration-700 velocity-target v-scale">
+                        <div class="mb-32">
+                            <span class="text-[11px] font-bold text-white/60 uppercase tracking-[0.2em] mb-6 block">AI // 07 Day Sprint</span>
+                            <h3 class="text-4xl font-black tracking-tighter uppercase mb-8 text-white">Prompt_Forge</h3>
+                        </div>
+                        <p class="text-lg font-bold text-white mb-20 italic leading-relaxed">"Engineered the impossible in a week. No other agency could match the velocity."</p>
+                        <div class="text-[11px] font-black uppercase tracking-[0.3em] text-white border-b-2 border-white/20 pb-2 inline-block">Audit_Engineering</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: THE BUILD ENGINE (SYNCED FROM V1) -->
+    <section id="execution" class="py-60 bg-white relative overflow-hidden border-t border-black/5">
+        <div class="orbit-glow top-1/2 left-0 -translate-y-1/2 opacity-5"></div>
+        <div class="max-w-[1200px] mx-auto px-8 relative z-10">
+            <div class="text-center mb-40">
+                <div class="inline-flex items-center gap-3 glass-zenith px-4 py-2 rounded-full mb-10 translate-y-reveal border-black/5">
+                    <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-accent">Protocol_V1_Zenith</span>
+                </div>
+                <h2 class="text-zenith mb-10" style="font-size: var(--step-h2);">The Build Engine.</h2>
+                <p class="text-2xl font-medium text-subtle max-w-3xl mx-auto leading-tight italic">
+                    Software engineering industrialized for the 2025 landscape. 
+                    <br><span class="text-ink font-bold not-italic">From concept to production in 168 hours.</span>
+                </p>
+            </div>
+
+            <div class="flex flex-col gap-2 relative">
+                <!-- Timeline Machine Track -->
+                <div class="absolute left-10 top-0 bottom-0 w-[1px] bg-black/10"></div>
+                
+                <!-- Engine 01 -->
+                <div class="engine-step active group py-20">
+                    <div class="absolute left-8 mt-1.5 w-5 h-5 rounded-full bg-accent shadow-[0_0_20px_rgba(0,102,255,0.3)]"></div>
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-12">
+                        <div class="max-w-xl">
+                            <div class="text-[11px] font-bold text-accent uppercase tracking-[0.3em] mb-6">T+24H // HYPER_LOGIC</div>
+                            <h3 class="text-4xl font-black uppercase mb-8 tracking-tighter">Architectural Mapping</h3>
+                            <p class="text-xl text-subtle leading-snug">Stripping the project to its core value. Defining the UI/UX protocol and structural skeleton.</p>
+                        </div>
+                        <div class="glass-zenith p-10 rounded-[30px] md:w-80 group-hover:border-accent transition-all duration-700 !bg-white">
+                            <div class="text-[9px] font-bold text-black/30 uppercase tracking-widest mb-4">Core_Output</div>
+                            <div class="text-sm font-bold text-ink">Logic_Definition_L0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Engine 02 -->
+                <div class="engine-step group py-20">
+                    <div class="absolute left-9 mt-1.5 w-3 h-3 rounded-full bg-black/10 group-hover:bg-accent transition-all"></div>
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-12">
+                        <div class="max-w-xl">
+                            <div class="text-[11px] font-bold text-subtle uppercase tracking-[0.3em] mb-6">T+96H // PARALLEL_SYNC</div>
+                            <h3 class="text-4xl font-black uppercase mb-8 tracking-tighter text-black/40 group-hover:text-ink transition-colors">Velocity Implementation</h3>
+                            <p class="text-xl text-subtle leading-snug opacity-40 group-hover:opacity-100 transition-opacity">Parallel engineering of frontend and sovereign backend. Live access to build logs on every commit.</p>
+                        </div>
+                        <div class="glass-zenith !bg-black/5 p-10 rounded-[30px] md:w-80 border-transparent transition-all duration-700 opacity-40 group-hover:opacity-100">
+                            <div class="text-[9px] font-bold text-black/30 uppercase tracking-widest mb-4">Core_Output</div>
+                            <div class="text-sm font-bold text-ink">Production_Stack_v1.0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Engine 03 -->
+                <div class="engine-step group py-20">
+                    <div class="absolute left-9 mt-1.5 w-3 h-3 rounded-full bg-black/10 group-hover:bg-accent transition-all"></div>
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-12">
+                        <div class="max-w-xl">
+                            <div class="text-[11px] font-bold text-subtle uppercase tracking-[0.3em] mb-6">T+168H // GLOBAL_EDGE</div>
+                            <h3 class="text-4xl font-black uppercase mb-8 tracking-tighter text-black/40 group-hover:text-ink transition-colors">Extreme Deployment</h3>
+                            <p class="text-xl text-subtle leading-snug opacity-40 group-hover:opacity-100 transition-opacity">Performance stress tests, technical handover, and sovereign cloud deployment at the global edge.</p>
+                        </div>
+                        <div class="glass-zenith !bg-black/5 p-10 rounded-[30px] md:w-80 border-transparent transition-all duration-700 opacity-40 group-hover:opacity-100">
+                            <div class="text-[9px] font-bold text-black/30 uppercase tracking-widest mb-4">Core_Output</div>
+                            <div class="text-sm font-bold text-ink">Ownership_Keys_Signed</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER: THE RAJKOT WORLD MASSIVE -->
+    <footer class="pt-60 pb-20 bg-white relative overflow-hidden border-t border-black/5">
+        <div class="max-w-[1400px] mx-auto px-8 relative z-10">
+            <div class="mb-40">
+                <div class="flex items-center gap-4 mb-12 translate-y-reveal">
+                    <div class="heartbeat"></div>
+                    <span class="text-[10px] font-bold uppercase tracking-[0.4em] text-accent">Status: Ready_For_Scale</span>
+                </div>
+                <h2 class="text-zenith mb-16" style="font-size: clamp(6rem, 15vw, 15rem);">
+                    RAJKOT <br>
+                    <span class="bg-accent text-white px-4">WORLD.</span>
+                </h2>
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-32">
+                    <p class="text-4xl font-black text-ink leading-[0.9] tracking-tighter uppercase max-w-2xl">
+                        BUILDING THE SOFTWARE <br>
+                        YOU WISH YOU HAD <span class="bg-accent text-white px-2 italic">YESTERDAY.</span>
+                        <br><br>
+                        <span class="text-xl text-subtle/40 tracking-normal capitalize font-bold">No extra. no fake. just code.</span>
+                    </p>
+                    
+                    <div class="w-full lg:w-96">
+                        <div class="glass-zenith !bg-black/5 p-12 rounded-[40px] border-black/5 shadow-none group">
+                            <div class="text-[11px] font-bold uppercase tracking-[0.3em] text-accent mb-10">Handoff_Protocol</div>
+                            <a href="mailto:ceo@apex.global" class="btn-zenith w-full justify-center !text-xl !py-7 !px-12">
+                                Start Build
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="ml-3 group-hover:translate-x-2 transition-transform"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </a>
+                            <div class="mt-12 flex justify-between items-center opacity-20 text-[10px] font-bold uppercase tracking-[0.4em]">
+                                <span>Apex_Systems_v9.0</span>
+                                <span>© 2025</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-16 border-t border-black/5 pt-20">
+                <a href="mailto:ceo@apex.global" class="group block">
+                    <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-subtle mb-4 block">Uplink_Channel</span>
+                    <span class="text-2xl font-black group-hover:underline">ceo@apex.global</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- ZENITH LIGHT ENGINE (GPU OPTIMIZED) ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        let lastScrollTop = 0;
+        let vel = 0;
+        const vProxy = { val: 0 };
+
+        window.addEventListener('scroll', () => {
+            const st = window.pageYOffset || document.documentElement.scrollTop;
+            const diff = Math.abs(st - lastScrollTop);
+            lastScrollTop = st;
+
+            // Normalize Velocity (0-1 peak)
+            vel = Math.min(diff / 25, 1);
+            
+            gsap.to(vProxy, {
+                val: vel,
+                duration: 0.4,
+                ease: "power2.out",
+                onUpdate: () => {
+                    document.documentElement.style.setProperty('--velocity', vProxy.val);
+                    
+                    // Dynamic Ticker Speed
+                    const ticker = document.querySelector('.animate-scroll');
+                    if(ticker) {
+                        const speed = 20 - (vProxy.val * 15);
+                        ticker.style.animationDuration = `${speed}s`;
+                    }
+
+                    // Update Velocity Bars
+                    const bars = document.querySelectorAll('.velocity-bar');
+                    const activeIdx = Math.floor(vProxy.val * 4);
+                    bars.forEach((bar, i) => {
+                        if (i === activeIdx) {
+                            bar.classList.add('!bg-accent', 'active');
+                            bar.style.width = '24px';
+                        } else {
+                            bar.classList.remove('!bg-accent', 'active');
+                            bar.style.width = '';
+                        }
+                    });
+                }
+            });
+        });
+
+        // --- CINEMATIC REVEALS ---
+        const reveals = gsap.utils.toArray('.glass-zenith, .engine-step, h1, h2, .translate-y-reveal, .animate-reveal');
+        reveals.forEach(el => {
+            gsap.from(el, {
+                scrollTrigger: {
+                    trigger: el,
+                    start: "top 92%",
+                    toggleActions: "play none none none"
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1.5,
+                ease: "power4.out",
+                clearProps: "all"
+            });
+        });
+
+        // Machine Timeline Interaction
+        gsap.utils.toArray('.engine-step').forEach((step, i) => {
+            ScrollTrigger.create({
+                trigger: step,
+                start: "top 60%",
+                onEnter: () => {
+                    gsap.utils.toArray('.engine-step').forEach(s => s.classList.remove('active'));
+                    step.classList.add('active');
+                },
+                onEnterBack: () => {
+                    gsap.utils.toArray('.engine-step').forEach(s => s.classList.remove('active'));
+                    step.classList.add('active');
+                }
+            });
+        });
+
+        // Zenith Hero Entrance
+        const tl = gsap.timeline();
+        tl.from('.text-zenith', {
+            scale: 1.8,
+            opacity: 0,
+            filter: "blur(40px)",
+            duration: 2.5,
+            ease: "power4.out",
+            clearProps: "all"
+        })
+        .from('#hero p, .btn-zenith, nav', {
+            y: 50,
+            opacity: 0,
+            stagger: 0.1,
+            duration: 1.5,
+            ease: "power4.out"
+        }, "-=1.8")
+        .from('.orbit-glow', {
+            opacity: 0,
+            duration: 3,
+            stagger: 0.5
+        }, "-=2");
+    </script>
+
+</body>
+</html>
