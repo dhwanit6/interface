@@ -92,21 +92,73 @@
             border: 1px solid rgba(255, 255, 255, 0.06);
         }
 
+        /* EXTRAORDINARY CTA BUTTON */
         .btn-primary {
-            background: var(--accent); 
+            position: relative;
+            background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 50%, var(--accent) 100%);
+            background-size: 200% 200%;
             color: #fff; 
-            font-weight: 600; 
-            font-size: 14px; 
-            padding: 14px 28px; 
-            border-radius: 10px; 
-            transition: all 0.5s ease, background 0.8s ease;
+            font-weight: 700; 
+            font-size: 15px; 
+            padding: 16px 32px; 
+            border-radius: 14px; 
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             display: inline-flex; 
             align-items: center; 
-            gap: 8px;
+            gap: 10px;
+            overflow: hidden;
+            box-shadow: 
+                0 0 20px rgba(59, 130, 246, 0.3),
+                0 0 60px rgba(59, 130, 246, 0.1),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            animation: btn-gradient 3s ease infinite, btn-pulse 2s ease-in-out infinite;
         }
+        
+        @keyframes btn-gradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        @keyframes btn-pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 60px rgba(59, 130, 246, 0.1); }
+            50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.5), 0 0 80px rgba(59, 130, 246, 0.2); }
+        }
+        
+        /* Shimmer effect */
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: btn-shimmer 3s ease-in-out infinite;
+        }
+        
+        @keyframes btn-shimmer {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+        
         .btn-primary:hover { 
-            transform: translateY(-2px); 
-            filter: brightness(1.1);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 
+                0 0 40px rgba(59, 130, 246, 0.5),
+                0 0 100px rgba(139, 92, 246, 0.3),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0) scale(0.98);
+        }
+        
+        /* Arrow animation on hover */
+        .btn-primary svg {
+            transition: transform 0.3s ease;
+        }
+        .btn-primary:hover svg {
+            transform: translateX(4px);
         }
 
         .btn-secondary {
@@ -297,6 +349,35 @@
         .faq-item.open .faq-icon {
             transform: rotate(45deg);
         }
+
+        /* PHASE 2: CLOUDS */
+        .cloud {
+            position: absolute;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 40%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(20px);
+            animation: cloud-drift linear infinite;
+        }
+        @keyframes cloud-drift {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(calc(100vw + 100px)); }
+        }
+
+        /* PHASE 2: SHOOTING STARS */
+        .shooting-star {
+            position: absolute;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.8), transparent);
+            border-radius: 50%;
+            animation: shoot 1s linear forwards;
+            opacity: 0;
+        }
+        @keyframes shoot {
+            0% { opacity: 0; transform: translateX(0) translateY(0); }
+            10% { opacity: 1; }
+            100% { opacity: 0; transform: translateX(300px) translateY(300px); }
+        }
     </style>
 </head>
 <body class="bg-black body-grid relative">
@@ -318,6 +399,15 @@
         
         <!-- Stars (Night Only) -->
         <div id="stars-container" class="absolute inset-0 opacity-0"></div>
+        
+        <!-- Shooting Stars (Night Only) -->
+        <div id="shooting-stars-container" class="absolute inset-0 opacity-0 overflow-hidden"></div>
+        
+        <!-- Clouds -->
+        <div id="clouds-container" class="absolute inset-0 opacity-0"></div>
+        
+        <!-- Morning Mist -->
+        <div id="mist-container" class="absolute inset-0 opacity-0" style="background: linear-gradient(to top, rgba(255,255,255,0.15) 0%, transparent 40%);"></div>
         
         <!-- Birds (Day Only) -->
         <div id="birds-container" class="absolute inset-0 opacity-0"></div>
@@ -388,9 +478,6 @@
                         <a href="mailto:hello@interface.dev" class="btn-primary">
                             Start Your Build
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                        </a>
-                        <a href="#process" class="btn-secondary">
-                            See the Process
                         </a>
                     </div>
 
@@ -1104,9 +1191,11 @@
 
             init() {
                 this.createStars();
+                this.createClouds();
                 this.tick();
                 this.scheduleWeather();
                 this.scheduleBirds();
+                this.scheduleShootingStars();
             },
 
             createStars() {
@@ -1248,6 +1337,10 @@
                 }
 
                 this.applyTheme(currentTheme);
+                
+                // Phase 2 effects
+                this.updateMist();
+                this.updateClouds();
             },
 
             applyTheme(theme) {
@@ -1461,6 +1554,78 @@
                         delay: i * 0.4,
                         onComplete: () => bird.remove()
                     });
+                }
+            },
+
+            // PHASE 2: CLOUDS
+            createClouds() {
+                const container = document.getElementById('clouds-container');
+                for (let i = 0; i < 5; i++) {
+                    const cloud = document.createElement('div');
+                    cloud.className = 'cloud';
+                    const size = 100 + Math.random() * 150;
+                    cloud.style.width = `${size}px`;
+                    cloud.style.height = `${size * 0.6}px`;
+                    cloud.style.top = `${5 + Math.random() * 30}%`;
+                    cloud.style.left = `${Math.random() * 100}%`;
+                    cloud.style.animationDuration = `${60 + Math.random() * 40}s`;
+                    cloud.style.animationDelay = `${-Math.random() * 60}s`;
+                    container.appendChild(cloud);
+                }
+            },
+
+            // PHASE 2: SHOOTING STARS
+            scheduleShootingStars() {
+                setInterval(() => {
+                    // Only spawn shooting stars at night
+                    if (this.time <= 400 || this.time >= 2100) {
+                        if (Math.random() > 0.6) {
+                            this.spawnShootingStar();
+                        }
+                    }
+                }, 5000);
+            },
+
+            spawnShootingStar() {
+                const container = document.getElementById('shooting-stars-container');
+                gsap.to(container, { opacity: 1, duration: 0.5 });
+                
+                const star = document.createElement('div');
+                star.className = 'shooting-star';
+                star.style.left = `${10 + Math.random() * 60}%`;
+                star.style.top = `${5 + Math.random() * 30}%`;
+                star.style.transform = `rotate(${30 + Math.random() * 30}deg)`;
+                container.appendChild(star);
+
+                setTimeout(() => star.remove(), 1500);
+            },
+
+            // PHASE 2: MORNING MIST
+            updateMist() {
+                const mist = document.getElementById('mist-container');
+                const t = this.time;
+                
+                // Mist appears during sunrise (400-700) and fades by mid-morning
+                if (t >= 400 && t < 800) {
+                    const intensity = t < 600 
+                        ? (t - 400) / 200 * 0.3  // Fade in
+                        : 0.3 - ((t - 600) / 200 * 0.3); // Fade out
+                    gsap.to(mist, { opacity: intensity, duration: 2 });
+                } else {
+                    gsap.to(mist, { opacity: 0, duration: 2 });
+                }
+            },
+
+            // PHASE 2: CLOUD VISIBILITY
+            updateClouds() {
+                const clouds = document.getElementById('clouds-container');
+                const t = this.time;
+                
+                // Clouds visible during day (600-1800)
+                if (t >= 600 && t < 1800) {
+                    gsap.to(clouds, { opacity: 0.5, duration: 3 });
+                } else {
+                    gsap.to(clouds, { opacity: 0, duration: 3 });
                 }
             }
         };
