@@ -48,13 +48,17 @@
             --sky-top: #050505;
             --sky-bottom: #0a0a0a;
         }
+        html {
+            background: var(--canvas);
+            transition: background 2s ease-in-out;
+        }
         body { 
-            background: #000; 
+            background: transparent; 
             color: var(--ink); 
             font-family: 'Inter', sans-serif; 
             overflow-x: hidden; 
             -webkit-font-smoothing: antialiased; 
-            transition: color 3s ease-in-out;
+            transition: color 2s ease-in-out;
         }
         
         /* GRID BACKGROUND */
@@ -79,17 +83,16 @@
             font-family: 'Outfit', sans-serif; 
             font-weight: 900; 
             line-height: 0.95; 
-            letter-spacing: -0.04em; 
+            letter-spacing: -0.02em; /* Reduced from -0.04em to prevent letters touching */
             text-transform: uppercase;
             background: linear-gradient(180deg, var(--ink) 0%, rgba(250, 250, 250, 0.6) 100%);
             -webkit-background-clip: text; 
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 20px rgba(0,0,0,0.1);
         }
 
         .glass-dark {
             background: rgba(23, 23, 23, 0.8);
-            backdrop-filter: blur(24px) saturate(180%);
+            backdrop-filter: blur(12px) saturate(150%);
             border: 1px solid rgba(255, 255, 255, 0.06);
         }
 
@@ -183,31 +186,29 @@
         }
 
         /* ========================================
-           VALUE BUTTONS - STATUS PILLS
+           VALUE BUTTONS - STATUS PILLS (COMPACT)
            ======================================== */
         .trust-badge-extraordinary {
             position: relative;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 12px 24px;
-            border-radius: 99px; /* Status pill shape */
+            background: rgba(20, 20, 25, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 8px 14px;
+            border-radius: 99px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            transition: all 0.4s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
         .trust-badge-extraordinary:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
         }
         
         .trust-badge-extraordinary .badge-icon {
-            width: 28px;
-            height: 28px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             background: rgba(34, 197, 94, 0.1);
             display: flex;
@@ -217,30 +218,30 @@
         }
         
         .trust-badge-extraordinary .badge-icon svg {
-            width: 14px;
-            height: 14px;
+            width: 11px;
+            height: 11px;
             color: #22c55e;
         }
         
         .trust-badge-extraordinary .badge-content {
             display: flex;
-            flex-direction: row; /* Horizontal for compact feel */
+            flex-direction: row;
             align-items: baseline;
-            gap: 6px;
+            gap: 4px;
         }
         
         .trust-badge-extraordinary .badge-value {
-            font-size: 14px;
+            font-size: 11px;
             font-weight: 600;
             color: var(--ink);
             white-space: nowrap;
         }
         
         .trust-badge-extraordinary .badge-label {
-            font-size: 10px;
+            font-size: 8px;
             color: var(--subtle);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.03em;
             opacity: 0.6;
         }
 
@@ -310,7 +311,6 @@
             background: rgba(23, 23, 23, 0.5);
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.06);
-            transition: all 0.8s ease, background 3s ease-in-out, border-color 3s ease-in-out, box-shadow 0.8s ease;
         }
         .card-glass:hover {
             border-color: rgba(59, 130, 246, 0.3);
@@ -324,7 +324,6 @@
             border-radius: 12px;
             overflow: hidden;
             font-family: 'JetBrains Mono', monospace;
-            transition: background 3s ease-in-out, border-color 3s ease-in-out;
         }
         .terminal-header {
             background: rgba(255, 255, 255, 0.03);
@@ -394,11 +393,10 @@
 
         /* BENTO GRID */
         .bento-item {
-            background: linear-gradient(135deg, rgba(23, 23, 23, 0.8) 0%, rgba(23, 23, 23, 0.4) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(20, 20, 25, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             border-radius: 24px;
             padding: 32px;
-            transition: all 0.8s ease, background 3s ease-in-out, border-color 3s ease-in-out;
         }
         .bento-item:hover {
             transform: translateY(-4px);
@@ -412,7 +410,6 @@
             background: linear-gradient(180deg, var(--ink) 0%, var(--subtle) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            transition: all 3s ease-in-out;
         }
 
         /* FLOATING ANIMATIONS */
@@ -435,16 +432,14 @@
         .step-number {
             color: var(--accent);
             opacity: 0.4;
-            transition: color 3s ease-in-out, opacity 3s ease-in-out;
         }
 
         /* TESTIMONIAL CARD */
         .testimonial-card {
-            background: linear-gradient(135deg, rgba(23, 23, 23, 0.9) 0%, rgba(23, 23, 23, 0.5) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(20, 20, 25, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             border-radius: 24px;
             padding: 32px;
-            transition: all 0.8s ease, background 3s ease-in-out, border-color 3s ease-in-out;
         }
         .testimonial-card:hover {
             transform: translateY(-4px);
@@ -453,7 +448,7 @@
         /* FAQ ACCORDION */
         .faq-item {
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            transition: border-color 3s ease-in-out;
+            transition: border-color 4s ease-in-out;
         }
         .faq-item:last-child {
             border-bottom: none;
@@ -493,20 +488,29 @@
             100% { transform: translateX(calc(100vw + 100px)); }
         }
 
-        /* PHASE 2: SHOOTING STARS */
+        /* PHASE 2: SHOOTING STARS - Physics Correct */
         .shooting-star {
             position: absolute;
-            width: 100px;
+            width: 120px;
             height: 2px;
-            background: linear-gradient(90deg, rgba(255,255,255,0.8), transparent);
-            border-radius: 50%;
-            animation: shoot 1s linear forwards;
+            /* Tail on LEFT (bright), head on RIGHT (fades) - star moves RIGHT so tail trails behind */
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.9) 30%, rgba(255,255,255,1) 100%);
+            border-radius: 2px;
+            transform: rotate(45deg); /* Angled for diagonal fall */
+            transform-origin: right center;
             opacity: 0;
+            animation: shoot 1.5s ease-out forwards;
         }
         @keyframes shoot {
-            0% { opacity: 0; transform: translateX(0) translateY(0); }
-            10% { opacity: 1; }
-            100% { opacity: 0; transform: translateX(300px) translateY(300px); }
+            0% { 
+                opacity: 0; 
+                transform: rotate(45deg) translateX(0); 
+            }
+            5% { opacity: 1; }
+            100% { 
+                opacity: 0; 
+                transform: rotate(45deg) translateX(400px); 
+            }
         }
         
         /* ATMOSPHERIC MODE INDICATOR */
@@ -538,9 +542,21 @@
             font-size: 14px;
         }
         
-        /* Transition text contrast boost */
+        /* Transition text contrast boost - ALWAYS READABLE */
         .transition-contrast {
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 0 20px rgba(0,0,0,0.2);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5), 0 0 30px rgba(0,0,0,0.3);
+        }
+        
+        /* UNIVERSAL THEME TRANSITIONS - 2s is buttery smooth */
+        *, *::before, *::after {
+            transition-property: color, background, border-color, opacity;
+            transition-duration: 2s;
+            transition-timing-function: ease-in-out;
+        }
+        
+        /* Exclude animation properties from slow transitions */
+        .btn-primary, .btn-secondary, .bento-item, .card-glass, a {
+            transition: all 0.3s ease, color 2s ease-in-out, background 2s ease-in-out;
         }
         
         /* Trust badges enhanced */
@@ -669,8 +685,13 @@
             }
         }
         
-        /* Smooth scrolling */
+        /* Buttery smooth scrolling */
         html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Smooth scroll feel */
+        * {
             scroll-behavior: smooth;
         }
         
@@ -719,8 +740,8 @@
 
     <!-- HEADER & NAV -->
     <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1100px]">
-        <div class="glass-dark rounded-2xl px-6 h-14 flex justify-between items-center">
-            <div class="flex items-center gap-10">
+        <div class="glass-dark rounded-2xl px-5 h-12 flex justify-between items-center">
+            <div class="flex items-center gap-6">
                 <a href="#" class="text-lg font-bold tracking-tight flex items-center gap-2">
                     <img src="icon/primary.svg" alt="INTERFACE" class="w-6 h-6 brand-icon dark-mode">
                     INTERFACE
@@ -769,12 +790,10 @@
                     </p>
                     
                     <div class="flex flex-wrap gap-4 mb-12">
-                        <div class="btn-extraordinary-wrapper">
-                            <a href="mailto:hello@interface.net.in" class="btn-extraordinary">
-                                <span>Start Your Build</span>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                            </a>
-                        </div>
+                        <a href="mailto:hello@interface.net.in" class="btn-primary">
+                            Start Your Build
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </a>
                     </div>
 
                     <!-- Trust Badges - EXTRAORDINARY -->
@@ -1312,7 +1331,7 @@
     </section>
 
     <!-- FOOTER -->
-    <footer class="py-12 px-6 border-t border-white/5">
+    <footer class="py-8 px-6 border-t border-white/5">
         <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="flex items-center gap-2">
                 <img src="icon/primary.svg" alt="INTERFACE" class="w-6 h-6 brand-icon dark-mode">
@@ -1377,12 +1396,12 @@
             gsap.from(el, {
                 scrollTrigger: {
                     trigger: el,
-                    start: "top 90%",
+                    start: "top 95%",
                     toggleActions: "play none none none"
                 },
-                y: 30,
+                y: 15,
                 opacity: 0,
-                duration: 1,
+                duration: 0.4,
                 ease: "power3.out"
             });
         });
@@ -1392,26 +1411,26 @@
             .from('.text-hero', {
                 y: 60,
                 opacity: 0,
-                duration: 1.2,
+                duration: 0.6,
                 ease: "power4.out"
             })
             .from('#hero p, #hero .btn-primary, #hero .btn-secondary', {
                 y: 30,
                 opacity: 0,
                 stagger: 0.1,
-                duration: 0.8,
+                duration: 0.4,
                 ease: "power3.out"
             }, "-=0.8")
             .from('.terminal', {
                 y: 40,
                 opacity: 0,
-                duration: 1,
+                duration: 0.5,
                 ease: "power3.out"
             }, "-=0.6")
             .from('.glow-sphere', {
                 opacity: 0,
                 scale: 0.8,
-                duration: 2,
+                duration: 1,
                 stagger: 0.3
             }, "-=1.5");
 
@@ -1544,7 +1563,7 @@
                 this.createStars();
                 this.createClouds();
                 this.tick();
-                this.scheduleWeather();
+                // Rain disabled
                 this.scheduleBirds();
                 this.scheduleShootingStars();
             },
@@ -1886,6 +1905,51 @@
                 });
                 document.querySelectorAll('.trust-badge-extraordinary .badge-label').forEach(el => {
                     el.style.color = theme.subtle;
+                });
+                
+                // ============================================
+                // SEAMLESS TRANSPARENT BACKGROUNDS
+                // ============================================
+                
+                // ALL SECTIONS - fully transparent
+                document.querySelectorAll('section').forEach(el => {
+                    el.style.background = 'transparent';
+                });
+                
+                // HEADER - transparent
+                document.querySelectorAll('header').forEach(el => {
+                    el.style.background = 'transparent';
+                });
+                
+                // FOOTER - transparent (no tint)
+                document.querySelectorAll('footer').forEach(el => {
+                    el.style.background = 'transparent';
+                    el.style.borderColor = isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.03)';
+                });
+                
+                // TICKER/BORDER-Y SECTIONS - transparent (no tint)
+                document.querySelectorAll('.border-y, .border-t, .border-b').forEach(el => {
+                    el.style.background = 'transparent';
+                    el.style.borderColor = isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.03)';
+                });
+                
+                // TICKER TEXT - simple opacity
+                document.querySelectorAll('.animate-scroll span').forEach(el => {
+                    el.style.color = theme.ink;
+                    el.style.opacity = el.classList.contains('text-accent/30') ? '0.3' : '0.12';
+                });
+                
+                // CARDS - subtle glass effect only
+                const cardBg = isLight 
+                    ? 'rgba(255,255,255,0.75)' 
+                    : 'rgba(20,20,25,0.7)';
+                const cardBorder = isLight 
+                    ? 'rgba(0,0,0,0.06)' 
+                    : 'rgba(255,255,255,0.04)';
+                
+                document.querySelectorAll('.bento-item, .card-glass, .testimonial-card, .glass-dark, .trust-badge-extraordinary').forEach(el => {
+                    el.style.background = cardBg;
+                    el.style.borderColor = cardBorder;
                 });
             },
             
