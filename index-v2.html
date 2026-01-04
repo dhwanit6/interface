@@ -76,8 +76,11 @@
         }
         
         /* VELOCITY ENGINE */
-        .velocity-blur { filter: blur(calc(2px * var(--velocity-blur, 0))); transition: filter 0.2s ease-out; }
-        .velocity-scale { transform: scale(calc(1 + (0.03 * var(--velocity-blur, 0)))); transition: transform 0.2s ease-out; }
+        /* Disabled on mobile for performance */
+        @media (min-width: 768px) {
+            .velocity-blur { filter: blur(calc(2px * var(--velocity-blur, 0))); transition: filter 0.2s ease-out; }
+            .velocity-scale { transform: scale(calc(1 + (0.03 * var(--velocity-blur, 0)))); transition: transform 0.2s ease-out; }
+        }
 
         .text-hero { 
             font-family: 'Outfit', sans-serif; 
@@ -650,7 +653,12 @@
             #comparison-grid {
                 display: grid !important;
                 grid-template-columns: 1fr !important;
-                gap: 1rem;
+                gap: 1.5rem;
+            }
+
+            /* Compact comparison cards on mobile */
+            .card-glass {
+                padding: 1.5rem !important;
             }
         }
         
@@ -908,14 +916,14 @@
                     </div>
                     
                     <h1 class="text-hero text-6xl md:text-7xl lg:text-8xl mb-6 velocity-blur">
-                        WHERE CODE<br>MEETS INTENT.
+                        ENGINEERING<br>THE INEVITABLE.
                     </h1>
                     
                     <p class="text-lg md:text-xl text-subtle leading-relaxed mb-4 max-w-lg">
-                        Building the software you wish you had <span class="text-ink font-semibold">yesterday</span>.
+                        We build software that <span class="text-ink font-semibold">defines categories</span>. Speed is a feature. Precision is the standard.
                     </p>
                     <p class="text-base text-subtle/70 leading-relaxed mb-10 max-w-lg">
-                        We move fast, ship faster, and stay humble. No ego. Just velocity.
+                        We operate at the speed of thought. No bureaucracy. Just pure engineering velocity.
                     </p>
                     
                     <div class="flex flex-wrap gap-4 mb-12">
@@ -1149,7 +1157,7 @@
             <div class="text-center mb-20">
                 <p class="text-xs font-semibold uppercase tracking-widest text-accent mb-4">THE ENGINEERING LIFECYCLE</p>
                 <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-                    From chaos to code in 7-14 days.
+                    CHAOS TO PRODUCTION. 2 WEEKS.
                 </h2>
                 <p class="text-subtle max-w-xl mx-auto">No magic. Just method. A battle-tested protocol for shipping full products — not half-baked MVPs.</p>
             </div>
@@ -1318,11 +1326,11 @@
     <section class="py-32 px-6 border-y border-white/5">
         <div class="max-w-[1200px] mx-auto">
             <div class="text-center mb-20">
-                <p class="text-xs font-semibold uppercase tracking-widest text-accent mb-4">The Sweet Spot</p>
+                <p class="text-xs font-semibold uppercase tracking-widest text-accent mb-4">The Unfair Advantage</p>
                 <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">
                     WHY PARTNER WITH INTERFACE?
                 </h2>
-                <p class="text-subtle max-w-2xl mx-auto">We don't work for you. We work as the bridge to your product.</p>
+                <p class="text-subtle max-w-2xl mx-auto">We are not a vendor. We are your technical co-founders on demand.</p>
             </div>
 
             <div id="comparison-grid" class="grid lg:grid-cols-3 gap-8">
@@ -1616,12 +1624,21 @@
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // Velocity Engine with decay fix
+        // Velocity Engine with decay fix (Optimized)
         let lastScrollTop = 0;
         const velocityProxy = { blur: 0 };
         let blurDecayTimer = null;
+        let isMobile = window.innerWidth < 768;
+
+        // Update isMobile on resize
+        window.addEventListener('resize', () => {
+            isMobile = window.innerWidth < 768;
+        });
 
         window.addEventListener('scroll', () => {
+            // Disable velocity blur logic completely on mobile
+            if (isMobile) return;
+
             const st = window.pageYOffset || document.documentElement.scrollTop;
             const velocity = Math.abs(st - lastScrollTop);
             lastScrollTop = st;
@@ -1650,7 +1667,7 @@
                     }
                 });
             }, 150);
-        });
+        }, { passive: true });
 
         // Reveal Animations - INSTANT and snappy
         gsap.utils.toArray('.bento-item, .card-glass, section h2, section p').forEach(el => {
@@ -1664,6 +1681,33 @@
                 opacity: 0,
                 duration: 0.3,
                 ease: "none"
+            });
+        });
+
+        // Magnetic Buttons
+        const magneticButtons = document.querySelectorAll('.btn-extraordinary, .btn-primary');
+
+        magneticButtons.forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+
+                gsap.to(btn, {
+                    duration: 0.3,
+                    x: x * 0.2,
+                    y: y * 0.2,
+                    ease: "power2.out"
+                });
+            });
+
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, {
+                    duration: 0.5,
+                    x: 0,
+                    y: 0,
+                    ease: "elastic.out(1, 0.3)"
+                });
             });
         });
 
@@ -1736,13 +1780,29 @@
 
         let currentSequence = 0;
         const terminal = document.getElementById('terminal-content');
+        let terminalRunning = true;
+
+        // Pause terminal when not visible
+        const terminalObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                terminalRunning = entry.isIntersecting;
+            });
+        });
+        terminalObserver.observe(terminal);
 
         async function typeTerminal() {
             while (true) {
+                if (!terminalRunning) {
+                    await new Promise(r => setTimeout(r, 1000));
+                    continue;
+                }
+
                 const sequence = terminalSequences[currentSequence];
                 terminal.innerHTML = '';
                 
                 for (const line of sequence) {
+                    if (!terminalRunning) break; // Break loop if scrolled away
+
                     const p = document.createElement('p');
                     if (line.type === 'cmd') {
                         p.innerHTML = `<span class="cmd">$</span> <span class="path">${line.text.substring(2)}</span>`;
@@ -1756,21 +1816,27 @@
                     p.style.opacity = '0';
                     terminal.appendChild(p);
                     
-                    await new Promise(r => setTimeout(r, 100));
+                    // Faster typing on mobile
+                    const delay = isMobile ? 50 : 100;
+                    const pause = isMobile ? 200 : 400;
+
+                    await new Promise(r => setTimeout(r, delay));
                     gsap.to(p, { opacity: 1, duration: 0.3 });
-                    await new Promise(r => setTimeout(r, 400));
+                    await new Promise(r => setTimeout(r, pause));
                 }
                 
-                // Add cursor
-                const cursor = document.createElement('p');
-                cursor.innerHTML = '<span class="cmd">$</span> <span class="terminal-cursor"></span>';
-                cursor.className = 'mt-4';
-                terminal.appendChild(cursor);
-                
-                // Wait before next sequence - increased dwell time for readability
-                await new Promise(r => setTimeout(r, 5000));
-                
-                currentSequence = (currentSequence + 1) % terminalSequences.length;
+                if (terminalRunning) {
+                    // Add cursor
+                    const cursor = document.createElement('p');
+                    cursor.innerHTML = '<span class="cmd">$</span> <span class="terminal-cursor"></span>';
+                    cursor.className = 'mt-4';
+                    terminal.appendChild(cursor);
+
+                    // Wait before next sequence
+                    await new Promise(r => setTimeout(r, 5000));
+
+                    currentSequence = (currentSequence + 1) % terminalSequences.length;
+                }
             }
         }
 
@@ -2525,7 +2591,15 @@
                 for (let i = 0; i < 24; i++) strands.push(new Strand(i)); // Denser network
             };
 
+            let bridgeAnimating = true;
+
             const animate = () => {
+                if (!bridgeAnimating) {
+                    // Check again in a bit if paused
+                    requestAnimationFrame(animate);
+                    return;
+                }
+
                 ctx.clearRect(0, 0, w, h);
                 strands.forEach(s => {
                     s.update();
@@ -2533,6 +2607,14 @@
                 });
                 requestAnimationFrame(animate);
             };
+
+            // Optimize canvas - pause when not in view
+            const canvasObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    bridgeAnimating = entry.isIntersecting;
+                });
+            });
+            canvasObserver.observe(bridgeCanvas);
 
             window.addEventListener('resize', resize);
             resize();
